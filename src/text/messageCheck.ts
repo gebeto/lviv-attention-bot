@@ -27,13 +27,31 @@ const messageCheck = () => async (ctx: Context) => {
 
   const response = await openai.responses.create({
     model: 'gpt-4.1-nano',
+    // instructions: `
+    //   Process the input messages on Ukrainian Language,
+    //   Analyze the cities that are mentioned in the text and calculate the distance to them,
+    //   find and extract the data which related to any objects coming close to the city,
+    //   the city name is Lviv/Львів, Ukraine.
+    //   The city name can be not included in the text, in this case the message is about Lviv.
+    //   if anything is going to Lviv, and it is critical and it is not so far,
+    //   answer: YES, otherwise answer: NO
+    // `,
     instructions: `
-      Process the input messages on Ukrainian Language,
-      Analyze the cities that are mentioned in the text and calculate the distance to them,
-      find and extract the data which related to any objects coming close to the city,
-      the city name is Lviv/Львів, Ukraine.
-      if anything is going to Lviv, and it is critical and it is not so far,
-      answer: YES, otherwise answer: NO
+      Проаналізуйте вхідні повідомлення українською мовою,
+      Ці повідомлення з Львівсткої групи, яка знаходиться в Україні.
+
+      Візьми до уваги міста, згадані в тексті, та обчисліть відстань від них до Львова.
+
+      Назва міста - Львів, Україна.
+
+      Якщо в тексті немає згадки про назву міста значить там йдеться про Львів.
+      Якщо пишуть що на підльоті чи ще щось в тому роді, значить обєкт вже близько і це небезпечно
+      Коли пишуть про вибухи сусідніх містах або областях, це теж критично важливо, але тільки якщо це прилягаючі міста або області.
+
+      Якщо якийсь обєкт наближається, і це критично важливо, та він неминуче близько -
+      відповідай: YES, в іншому випадку відповідайте: NO.
+      
+      Відповідай тільки одним словом YES або NO.
     `,
     input: ctx.text,
     text: {
@@ -48,7 +66,6 @@ const messageCheck = () => async (ctx: Context) => {
     top_p: 1,
     store: true,
   });
-  previousResponseId = response.id;
 
   const messageId = ctx.message?.message_id;
   const responseMessage = response.output_text;
