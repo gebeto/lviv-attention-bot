@@ -32,6 +32,7 @@ const messageCheck = () => async (ctx: Context) => {
     previous_response_id: previousResponseId,
     instructions: `
       Process the input messages on Ukrainian Language,
+      Analyze the cities that are mentioned in the text and calculate the distance to them,
       find and extract the data which related to any objects coming close to the city,
       the city name is Lviv/Львів, Ukraine.
       if anything is going to Lviv, and it is critical and it is not so far,
