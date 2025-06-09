@@ -7,8 +7,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-let previousResponseId: string | null = null;
-
 const debug = createDebug('bot:greeting_text');
 
 const replyToMessage = (
@@ -16,7 +14,7 @@ const replyToMessage = (
   messageId: number,
   responseMessage: string,
 ) =>
-  ctx.replyWithMarkdownV2(responseMessage, {
+  ctx.reply(responseMessage, {
     reply_parameters: { message_id: messageId },
   });
 
@@ -29,7 +27,6 @@ const messageCheck = () => async (ctx: Context) => {
 
   const response = await openai.responses.create({
     model: 'gpt-4.1-nano',
-    previous_response_id: previousResponseId,
     instructions: `
       Process the input messages on Ukrainian Language,
       Analyze the cities that are mentioned in the text and calculate the distance to them,
